@@ -17,12 +17,30 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 
+#Using include() to add paths from created applications.
 from django.urls import include
+
 urlpatterns += [
-    path('content_management/', include('content_management.urls'))
+    path('content_management/', include('content_management.urls')),
+    path('user_accounts/', include('user_accounts.urls')),
 ]
+
+#Addingg URL maps to redirect the base application to content_management application.
+from django.views.generic import RedirectView
+
+urlpatterns += [
+    path('', RedirectView.as_view(url='content_management/', permanent=True)),
+]
+
+#Using static() to add URL mapping to serve static files during development(only).
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+
+
